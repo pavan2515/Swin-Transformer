@@ -1,4 +1,4 @@
-# Swin-TransformerHandwritten Donut — English + Kannada OCR (Swin Transformer)
+# Handwritten Donut — English + Kannada OCR (Swin Transformer)
 
 This project implements a lightweight OCR model for handwritten text using:
 
