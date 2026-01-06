@@ -1,201 +1,162 @@
-# Handwritten Donut — English + Kannada OCR (Swin Transformer)
+✍️ Handwritten Manuscript Recognition (English + Kannada)
 
-A clean, production-ready system for recognizing handwritten English and Kannada characters using deep learning.
+A modular implementation of a Swin-Transformer–based model inspired by Donut, designed for handwritten text recognition in English and Kannada.
 
+This repo is structured to be clean, configurable, and easy to extend — whether you’re experimenting or moving toward production.
 
-🤔 What is this?
-Think of this as a smart scanner that can read handwritten characters. You show it an image of a handwritten letter (like 'a' or 'ಅ'), and it tells you what it is.
-The magic: It uses AI to learn from examples, just like how you learned to read as a kid!
-
-🎨 What makes this special?
-Your original code worked, but it was like a messy kitchen where everything is in one drawer. This version is like a professional kitchen - everything has its place, and it's much faster!
-The Big Changes:
-
-Organized Structure 📁
-
-Before: Everything jumbled in one file
-Now: Separate folders for data, models, and utilities
-Why? Easy to find things, easy to fix bugs, easy for teams to work together
-
-
-Blazing Fast ⚡
-
-Before: Preprocessing happened every time (slow!)
-Now: Preprocessing happens once when loading data
-Result: 3-5x faster training!
-
-
-Smart Training 🧠
-
-Before: Just showed you loss (confusing!)
-Now: Shows accuracy, character accuracy, error rates
-Plus: Automatically saves best model, stops if it's not learning
-
-
-Easy to Adjust ⚙️
-
-Before: Had to edit code to change settings
-Now: Just edit config.yaml - no code changes needed!
-
-
-
-
-📦 What's in the box?
+📁 Project Structure
 handwritten-recognition/
-│
-├── 🎛️ config.yaml           # All your settings (like a control panel)
-├── 📋 requirements.txt      # Software needed to run this
-│
-├── 🚂 train.py              # Trains the AI model
-├── 🔮 inference.py          # Uses trained model to predict
-│
-├── 📂 data/                 # Everything about loading data
-│   ├── tokenizer.py         # Converts characters ↔ numbers
-│   └── dataset.py           # Loads and prepares images
-│
-├── 🤖 models/               # The AI brain
-│   ├── encoder.py           # Looks at images
-│   ├── decoder.py           # Generates text predictions
-│   └── model.py             # Combines everything
-│
-└── 🛠️ utils/                # Helper tools
-    ├── preprocessing.py     # Cleans up images
-    ├── metrics.py           # Measures how good the AI is
-    └── training.py          # Training helpers (saving, logging, etc.)
+├── config.yaml              # Main configuration
+├── requirements.txt         # Dependencies
+├── train.py                 # Training script
+├── inference.py             # Inference script
+├── data/
+│   ├── __init__.py
+│   ├── tokenizer.py
+│   └── dataset.py
+├── models/
+│   ├── __init__.py
+│   ├── encoder.py
+│   ├── decoder.py
+│   └── model.py
+└── utils/
+    ├── __init__.py
+    ├── preprocessing.py
+    ├── metrics.py
+    └── training.py
 
-🚀 Getting Started (5 minutes!)
-Step 1: Set everything up
-bash# Create the project folder
-mkdir handwritten-recognition
-cd handwritten-recognition
+🚀 Setup
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate   # Linux/Mac
+venv\Scripts\activate      # Windows
 
-# Create subfolders
-mkdir data models utils checkpoints logs outputs
-
-# Create special files Python needs
-touch data/__init__.py models/__init__.py utils/__init__.py
-
-# Install required software
+# Install dependencies
 pip install -r requirements.txt
-```
 
-### Step 2: Organize your images
-
-Your images should look like this:
-```
-dataset/
-└── training_images/
-    ├── a/              ← Put all images of letter 'a' here
-    │   ├── img1.png
-    │   ├── img2.png
-    │   └── img3.png
-    ├── b/              ← Put all images of letter 'b' here
-    │   ├── img1.png
-    │   └── img2.png
-    ├── ಅ/              ← Put all images of 'ಅ' here
-    │   └── img1.png
-    └── ...
-The folder name = the character in the images!
-Step 3: Tell it where your images are
-Open config.yaml and change this line:
-yamldata:
-  train_path: "/path/to/your/dataset/training_images"  # ← Put your actual path here
-Step 4: Start training!
-bashpython train.py --config config.yaml
-```
-
-Now sit back! The AI will:
-- ✅ Load your images
-- ✅ Learn from them
-- ✅ Save the best model automatically
-- ✅ Show you how well it's learning
-
----
-
-## 📊 What you'll see while training
-```
-Epoch 1/50
-──────────────────────────────────────
-Train: loss: 2.35 | accuracy: 23.45% | cer: 54.33%
-Val:   loss: 2.12 | accuracy: 28.90% | cer: 47.66%
-✓ New best model saved!
-
-Epoch 2/50
-──────────────────────────────────────
-Train: loss: 1.87 | accuracy: 45.67% | cer: 32.11%
-Val:   loss: 1.76 | accuracy: 52.34% | cer: 28.77%
-✓ New best model saved!
-
-... (getting better each time!)
-
-Epoch 25/50
-──────────────────────────────────────
-Train: loss: 0.23 | accuracy: 94.50% | cer: 3.21%
-Val:   loss: 0.31 | accuracy: 91.20% | cer: 5.43%
-✓ New best model saved!
-What these numbers mean:
-
-Loss: Lower is better (think: how wrong it is)
-Accuracy: Higher is better (% of perfect matches)
-CER (Character Error Rate): Lower is better (% of mistakes)
-
-
-🔮 Using your trained model
-Once training finishes, use it to read new images:
-bash# Read one image
-python inference.py \
-    --checkpoint checkpoints/best_model.pth \
-    --image my_handwriting.png
-
-# Result: Prediction: a
-bash# Read many images at once
-python inference.py \
-    --checkpoint checkpoints/best_model.pth \
-    --image_dir my_images/ \
-    --output results.txt
-
-⚙️ Tweaking Settings
-All settings are in config.yaml. Here's what you might want to change:
-Training too slow?
-yamldata:
-  batch_size: 16  # Process more images at once (needs more GPU memory)
-Not learning well?
-yamltraining:
-  learning_rate: 5e-4  # Make it learn faster
-  epochs: 100          # Train for longer
-Running out of memory?
-yamldata:
-  batch_size: 4  # Process fewer images at once
-Images are very clean (printed, not handwritten)?
-yamldata:
-  apply_manuscript_preprocessing: false  # Turn off aggressive cleaning
-
-🐛 Something not working?
-"Module not found" error
-bash# Did you create these files?
+# Ensure packages import correctly
 touch data/__init__.py models/__init__.py utils/__init__.py
-"CUDA out of memory"
-yaml# In config.yaml, reduce batch size:
+
+🏋️ Training
+# Basic training
+python train.py --config config.yaml
+
+# Resume training (set resume_from in config.yaml)
+python train.py --config config.yaml
+
+# Monitor logs
+tail -f logs/training.log
+
+🔍 Inference
+# Single image
+python inference.py --checkpoint checkpoints/best_model.pth --image test.png
+
+# Batch directory
+python inference.py --checkpoint checkpoints/best_model.pth --image_dir images/
+
+# Save results to file
+python inference.py --checkpoint checkpoints/best_model.pth --image_dir images/ --output results.txt
+
+# Control decoding behavior
+python inference.py --checkpoint checkpoints/best_model.pth --image test.png --temperature 0.7 --top_k 5
+
+⚙️ Quick config.yaml Tweaks
 data:
-  batch_size: 4
-"No images found"
-bash# Check your dataset path in config.yaml
-# Make sure images are in folders named after their labels
-ls /your/path/training_images/
-Still stuck?
-bash# Check the training log for clues
+  train_path: "/your/path/here"   # ← Set dataset path
+  batch_size: 4                   # Lower if GPU OOM
+
+training:
+  epochs: 100
+  learning_rate: 3e-4
+
+
+Tip:
+Increase LR to train faster, decrease LR for more stable training.
+
+🐛 Common Issues & Fixes
+# Missing imports
+touch data/__init__.py models/__init__.py utils/__init__.py
+
+# CUDA OOM
+# Reduce batch_size in config.yaml
+
+# Dataset not found
+# Check path in config.yaml
+
+# Missing dependencies
+pip install -r requirements.txt
+
+📊 Metrics Explained
+Metric	Meaning	Good	Needs Work
+Loss	Model error	< 0.5	> 2.0
+Accuracy	Correct outputs	> 90%	< 50%
+CER	Character Error Rate	< 5%	> 20%
+📂 Important Outputs
+checkpoints/best_model.pth   # Best saved model
+logs/training.log            # Training history
+checkpoints/config.yaml      # Config used when training
+
+💡 Tips
+
+1️⃣ Always run inference using best_model.pth
+2️⃣ If something breaks — check logs first
+3️⃣ Start with a small dataset to test pipelines
+4️⃣ Watch GPU usage with:
+
+nvidia-smi
+
+
+5️⃣ Lower batch_size when memory is low
+
+🔄 Typical Workflow
+pip install -r requirements.txt
+touch data/__init__.py models/__init__.py utils/__init__.py
+
+nano config.yaml   # Set dataset path
+
+python train.py --config config.yaml
+tail -f logs/training.log
+
+python inference.py --checkpoint checkpoints/best_model.pth --image test.png
+
+🛠 Troubleshooting
 cat logs/training.log
+ls /path/to/dataset/training_images/
+nvidia-smi
 
-📈 How to know if it's working?
-Good signs:
+python -c "from data.tokenizer import CharTokenizer; print('OK')"
+python -c "from models.model import HandwrittenDonut; print('OK')"
 
-✅ Loss going down each epoch
-✅ Accuracy going up
-✅ CER (error rate) going down
-✅ Training and validation metrics are similar
+cat config.yaml
 
-Warning signs:
+🎯 Performance Tuning
+data:
+  batch_size: 16
+  num_workers: 4
 
-⚠️ Loss not changing → learning rate might be wrong
-⚠️ Training accuracy high but validation low → overfitting (train longer, add more data)
-⚠️ Loss becomes "nan" → learning rate too highd
+training:
+  epochs: 100
+  early_stopping_patience: 20
+
+model:
+  decoder_layers: 4
+  decoder_heads: 8
+
+💾 Checkpoint Management
+# Use best model
+checkpoints/best_model.pth
+
+# Resume from specific checkpoint
+# config.yaml:
+# resume_from: "checkpoints/checkpoint_epoch_20.pth"
+
+# Clean up old checkpoints
+rm checkpoints/checkpoint_epoch_*.pth
+
+📣 Notes
+
+Keep your config versioned
+
+Always validate on a held-out dataset
+
+Don’t delete __init__.py files — imports will break
