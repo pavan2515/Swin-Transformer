@@ -1,135 +1,140 @@
-✍️ Handwritten Manuscript Recognition (English + Kannada)
+# ✍️ Handwritten Manuscript Recognition (English + Kannada)
 
-A modular implementation of a Swin-Transformer–based model inspired by Donut, designed for handwritten text recognition in English and Kannada.
+A modular implementation of a Swin Transformer–based handwritten manuscript recognition model inspired by **Donut** — supporting **English and Kannada** characters.
 
-This repo is structured to be clean, configurable, and easy to extend — whether you’re experimenting or moving toward production.
+This project is designed to be:
 
-📁 Project Structure
+- 🔧 configurable  
+- 🧩 modular  
+- 🚀 easy to train, test, and extend  
+
+---
+
+## 📁 Project Structure
+
 handwritten-recognition/
-├── config.yaml              # Main configuration
-├── requirements.txt         # Dependencies
-├── train.py                 # Training script
-├── inference.py             # Inference script
+├── config.yaml
+├── requirements.txt
+├── train.py
+├── inference.py
 ├── data/
-│   ├── __init__.py
-│   ├── tokenizer.py
-│   └── dataset.py
+│ ├── init.py
+│ ├── tokenizer.py
+│ └── dataset.py
 ├── models/
-│   ├── __init__.py
-│   ├── encoder.py
-│   ├── decoder.py
-│   └── model.py
+│ ├── init.py
+│ ├── encoder.py
+│ ├── decoder.py
+│ └── model.py
 └── utils/
-    ├── __init__.py
-    ├── preprocessing.py
-    ├── metrics.py
-    └── training.py
+├── init.py
+├── preprocessing.py
+├── metrics.py
+└── training.py
 
-🚀 Setup
-# Create virtual environment
+yaml
+Copy code
+
+---
+
+## 🚀 Setup
+
+```bash
 python -m venv venv
-source venv/bin/activate   # Linux/Mac
-venv\Scripts\activate      # Windows
+source venv/bin/activate        # Linux/Mac
+venv\Scripts\activate           # Windows
 
-# Install dependencies
 pip install -r requirements.txt
 
-# Ensure packages import correctly
 touch data/__init__.py models/__init__.py utils/__init__.py
-
 🏋️ Training
-# Basic training
+bash
+Copy code
 python train.py --config config.yaml
+Resume training:
 
-# Resume training (set resume_from in config.yaml)
+bash
+Copy code
 python train.py --config config.yaml
+Monitor logs:
 
-# Monitor logs
+bash
+Copy code
 tail -f logs/training.log
-
 🔍 Inference
-# Single image
+bash
+Copy code
 python inference.py --checkpoint checkpoints/best_model.pth --image test.png
+Batch directory:
 
-# Batch directory
+bash
+Copy code
 python inference.py --checkpoint checkpoints/best_model.pth --image_dir images/
+Save results:
 
-# Save results to file
+bash
+Copy code
 python inference.py --checkpoint checkpoints/best_model.pth --image_dir images/ --output results.txt
+Control decoding:
 
-# Control decoding behavior
+bash
+Copy code
 python inference.py --checkpoint checkpoints/best_model.pth --image test.png --temperature 0.7 --top_k 5
-
-⚙️ Quick config.yaml Tweaks
+⚙️ Quick config.yaml Edits
+yaml
+Copy code
 data:
-  train_path: "/your/path/here"   # ← Set dataset path
-  batch_size: 4                   # Lower if GPU OOM
+  train_path: "/your/path/here"
+  batch_size: 4
 
 training:
   epochs: 100
   learning_rate: 3e-4
+💡 Reduce batch_size if GPU runs out of memory.
 
-
-Tip:
-Increase LR to train faster, decrease LR for more stable training.
-
-🐛 Common Issues & Fixes
-# Missing imports
+🐛 Common Fixes
+bash
+Copy code
 touch data/__init__.py models/__init__.py utils/__init__.py
-
-# CUDA OOM
-# Reduce batch_size in config.yaml
-
-# Dataset not found
-# Check path in config.yaml
-
-# Missing dependencies
 pip install -r requirements.txt
+Check dataset path in config.yaml.
 
-📊 Metrics Explained
+If CUDA error → lower batch size.
+
+📊 Metrics
 Metric	Meaning	Good	Needs Work
 Loss	Model error	< 0.5	> 2.0
 Accuracy	Correct outputs	> 90%	< 50%
 CER	Character Error Rate	< 5%	> 20%
+
 📂 Important Outputs
-checkpoints/best_model.pth   # Best saved model
-logs/training.log            # Training history
-checkpoints/config.yaml      # Config used when training
-
-💡 Tips
-
-1️⃣ Always run inference using best_model.pth
-2️⃣ If something breaks — check logs first
-3️⃣ Start with a small dataset to test pipelines
-4️⃣ Watch GPU usage with:
-
-nvidia-smi
-
-
-5️⃣ Lower batch_size when memory is low
-
+bash
+Copy code
+checkpoints/best_model.pth
+logs/training.log
+checkpoints/config.yaml
 🔄 Typical Workflow
+bash
+Copy code
 pip install -r requirements.txt
-touch data/__init__.py models/__init__.py utils/__init__.py
-
-nano config.yaml   # Set dataset path
+nano config.yaml
 
 python train.py --config config.yaml
 tail -f logs/training.log
 
 python inference.py --checkpoint checkpoints/best_model.pth --image test.png
-
 🛠 Troubleshooting
+bash
+Copy code
 cat logs/training.log
 ls /path/to/dataset/training_images/
 nvidia-smi
 
 python -c "from data.tokenizer import CharTokenizer; print('OK')"
 python -c "from models.model import HandwrittenDonut; print('OK')"
-
-cat config.yaml
-
 🎯 Performance Tuning
+yaml
+Copy code
 data:
   batch_size: 16
   num_workers: 4
@@ -141,22 +146,22 @@ training:
 model:
   decoder_layers: 4
   decoder_heads: 8
-
 💾 Checkpoint Management
-# Use best model
+bash
+Copy code
+# Best model
 checkpoints/best_model.pth
 
-# Resume from specific checkpoint
-# config.yaml:
+# Resume specific checkpoint
 # resume_from: "checkpoints/checkpoint_epoch_20.pth"
 
-# Clean up old checkpoints
+# Clean extras
 rm checkpoints/checkpoint_epoch_*.pth
+✅ Notes
+Always run inference using best_model.pth
 
-📣 Notes
+Keep __init__.py files (imports break otherwise)
 
-Keep your config versioned
+Validate on a separate dataset
 
-Always validate on a held-out dataset
-
-Don’t delete __init__.py files — imports will break
+Use nvidia-smi to watch GPU
