@@ -1,0 +1,55 @@
+# ============================================================
+# MODEL CONFIGURATION
+# ============================================================
+model:
+  encoder: "microsoft/swin-tiny-patch4-window7-224"
+  decoder_layers: 2
+  decoder_heads: 4
+  
+# ============================================================
+# DATA CONFIGURATION
+# ============================================================
+data:
+  train_path: "/content/dataset/training_images"
+  val_split: 0.2
+  test_split: 0.1
+  batch_size: 8
+  num_workers: 2
+  image_size: 224
+  apply_manuscript_preprocessing: true
+  
+# ============================================================
+# TRAINING CONFIGURATION
+# ============================================================
+training:
+  epochs: 50
+  learning_rate: 3e-4
+  weight_decay: 0.01
+  gradient_clip: 1.0
+  warmup_steps: 100
+  save_every: 5
+  validate_every: 1
+  early_stopping_patience: 10
+  mixed_precision: true
+  
+# ============================================================
+# TOKENIZER CONFIGURATION
+# ============================================================
+tokenizer:
+  max_length: 10
+  
+# ============================================================
+# PATHS
+# ============================================================
+paths:
+  checkpoint_dir: "./checkpoints"
+  log_dir: "./logs"
+  output_dir: "./outputs"
+  
+# ============================================================
+# EXPERIMENT
+# ============================================================
+experiment:
+  name: "handwritten_donut_v1"
+  seed: 42
+  resume_from: null
