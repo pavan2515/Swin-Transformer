@@ -1,4 +1,5 @@
-
+"""
+Training script for Handwritten Character Recognition
 """
 import os
 import argparse
